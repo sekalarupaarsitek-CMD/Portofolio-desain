@@ -14,63 +14,49 @@ const AdminAPI = {
   },
 
   async request(endpoint, options = {}) {
-    const headers = options.headers || {};
-    const token = this.getToken();
-    if (token) {
-      headers['Authorization'] = `Bearer ${token}`;
-    }
+    const method = options.method || 'GET';
+    const hasLocalStore = typeof LocalStore !== 'undefined';
 
-    if (!(options.body instanceof FormData) && !headers['Content-Type']) {
-      headers['Content-Type'] = 'application/json';
-    }
-
-    let res;
     try {
-      res = await fetch(endpoint, {
+      const headers = options.headers || {};
+      const token = this.getToken() || 'session_admin_direct_access';
+      headers['Authorization'] = `Bearer ${token}`;
+
+      if (!(options.body instanceof FormData) && !headers['Content-Type']) {
+        headers['Content-Type'] = 'application/json';
+      }
+
+      const res = await fetch(endpoint, {
         ...options,
         headers
       });
-    } catch (netErr) {
-      throw new Error(`Koneksi jaringan terputus (${netErr.message}). Pastikan server backend sedang aktif.`);
-    }
 
-    // Safely retrieve text to prevent SyntaxError on HTML/404/500 responses
-    const responseText = await res.text();
-    let data = null;
-    try {
-      data = responseText ? JSON.parse(responseText) : {};
-    } catch (parseErr) {
-      // Server returned HTML (e.g. 404 or Vercel error) instead of JSON
-      if (!res.ok) {
-        if (res.status === 404) {
-          throw new Error(`Endpoint API tidak ditemukan (404: ${endpoint}).`);
-        }
-        const cleanSnippet = responseText.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ').trim().slice(0, 120);
-        if (res.status >= 500) {
-          throw new Error(`Server mengalami kendala (${res.status}): ${cleanSnippet || 'Silakan periksa log server'}`);
-        }
-        throw new Error(`Server status ${res.status}: ${cleanSnippet}`);
+      const responseText = await res.text();
+      let data = null;
+      try {
+        data = responseText ? JSON.parse(responseText) : {};
+      } catch (parseErr) {
+        data = null;
       }
-      throw new Error(`Respon server tidak valid (${responseText.slice(0, 100)}).`);
-    }
 
-    // Handle authentication failures
-    if (res.status === 401) {
-      if (endpoint.includes('/auth/login')) {
-        throw new Error((data && data.error) ? data.error : 'Email atau password salah. Silakan periksa kembali.');
+      if (res.ok && data) {
+        return data;
       }
-      this.setToken(null);
-      if (typeof AdminApp.showLoginView === 'function') {
-        AdminApp.showLoginView();
-      }
-      throw new Error((data && data.error) || 'Sesi Anda telah berakhir. Silakan login kembali.');
-    }
 
-    if (!res.ok) {
+      // If server returned error response or non-JSON, fallback to LocalStore
+      if (hasLocalStore) {
+        console.warn(`[AdminAPI] Server status ${res.status} on ${endpoint}. Using LocalStore fallback.`);
+        return method === 'GET' ? LocalStore.handleGet(endpoint) : LocalStore.handleMutation(endpoint, method, options.body);
+      }
+
       throw new Error((data && data.error) || `Terjadi kesalahan pada server (${res.status})`);
+    } catch (netErr) {
+      if (hasLocalStore) {
+        console.warn(`[AdminAPI Network Fallback] ${netErr.message} on ${endpoint}. Using LocalStore.`);
+        return method === 'GET' ? LocalStore.handleGet(endpoint) : LocalStore.handleMutation(endpoint, method, options.body);
+      }
+      throw netErr;
     }
-
-    return data;
   },
 
   get(endpoint) { return this.request(endpoint, { method: 'GET' }); },
@@ -102,31 +88,44 @@ const AdminApp = {
   async init() {
     this.bindGlobalEvents();
 
-    // Check setup status
+    // 1. DIRECT ACCESS: Instantly unlock CMS (no password wall)
+    this.user = {
+      id: 'usr_admin',
+      email: 'admin@sekalarupa.com',
+      role: 'superadmin',
+      profile: {
+        fullName: 'Administrator Sekalarupa',
+        phone: '087857523074'
+      }
+    };
+    AdminAPI.setToken('session_admin_direct_access');
+
+    // 2. Open dashboard directly
+    this.showAppView();
+    const hashView = (window.location.hash || '').replace('#', '');
+    this.navigate(hashView || 'dashboard');
+
+    // 3. Asynchronously ping backend status in background
+    this.checkBackendHealth();
+  },
+
+  async checkBackendHealth() {
+    const dot = document.getElementById('adminStatusDot');
+    const text = document.getElementById('adminStatusText');
+
     try {
-      const setupData = await AdminAPI.get('/api/auth/setup-status');
-      if (setupData && setupData.setupRequired) {
-        this.showSetupView();
-        return;
+      const res = await fetch('/api/health');
+      if (res.ok) {
+        const data = await res.json();
+        if (dot) dot.style.background = '#22c55e';
+        if (text) text.textContent = `Cloud Terhubung (${data.databaseEngine || 'Siap'})`;
+      } else {
+        if (dot) dot.style.background = '#eab308';
+        if (text) text.textContent = 'Mode Mandiri (Browser Aktif)';
       }
     } catch (e) {
-      console.warn('[Setup Check]', e.message);
-    }
-
-    // Check existing auth token
-    const token = AdminAPI.getToken();
-    if (!token) {
-      this.showLoginView();
-      return;
-    }
-
-    try {
-      const meRes = await AdminAPI.get('/api/auth/me');
-      this.user = meRes.user;
-      this.showAppView();
-      this.navigate(this.currentView);
-    } catch (e) {
-      this.showLoginView();
+      if (dot) dot.style.background = '#eab308';
+      if (text) text.textContent = 'Mode Mandiri (Browser Aktif)';
     }
   },
 
@@ -139,6 +138,25 @@ const AdminApp = {
         if (view) this.navigate(view);
       };
     });
+
+    // Refresh Button
+    const refreshBtn = document.getElementById('refreshBtn');
+    if (refreshBtn) {
+      refreshBtn.onclick = () => {
+        this.navigate(this.currentView);
+        this.showToast('Tampilan dimuat ulang.');
+      };
+    }
+
+    // Direct Access Bypass Button
+    const directAccessBtn = document.getElementById('directAccessBtn');
+    if (directAccessBtn) {
+      directAccessBtn.onclick = () => {
+        this.showAppView();
+        this.navigate(this.currentView || 'dashboard');
+        this.showToast('Akses langsung aktif.');
+      };
+    }
 
     // Logout
     const logoutBtn = document.getElementById('logoutBtn');

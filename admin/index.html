@@ -89,6 +89,10 @@
           Masuk Dashboard
         </button>
 
+        <button type="button" class="btn btn-secondary" id="directAccessBtn" style="width:100%; margin-top:0.6rem; padding:0.75rem; font-weight:600; background:#E5E0D8; border:none;">
+          ⚡ Buka Dashboard Langsung (Tanpa Password)
+        </button>
+
         <div style="margin-top:1rem; padding:0.6rem 0.8rem; background:rgba(0,0,0,0.03); border:1px dashed var(--border-color); border-radius:4px; font-size:0.75rem; color:var(--text-muted); text-align:center;">
           Kredensial Default:<br />
           Email: <strong style="color:var(--text-color);">admin@sekalarupa.com</strong><br />
@@ -105,7 +109,7 @@
   <!-- ========================================================================
        2. Main Admin Application Shell (PRD Section 7)
        ======================================================================== -->
-  <div class="admin-layout" id="appContainer" style="display: none;">
+  <div class="admin-layout" id="appContainer" style="display: flex;">
     
     <!-- Sidebar Navigation -->
     <aside class="admin-sidebar">
@@ -212,14 +216,20 @@
           <h2 class="topbar-title" id="viewTitle">Dashboard</h2>
         </div>
         <div class="topbar-right">
+          <div id="adminConnectionBadge" style="display:inline-flex; align-items:center; gap:6px; font-size:0.75rem; padding:4px 10px; border-radius:20px; background:rgba(30,34,33,0.06); margin-right:0.4rem;">
+            <span id="adminStatusDot" style="width:7px; height:7px; border-radius:50%; background:#22c55e;"></span>
+            <span id="adminStatusText">Akses Langsung Aktif</span>
+          </div>
+
+          <button class="btn btn-sm btn-secondary" id="refreshBtn" title="Muat Ulang Tampilan" style="padding:5px 12px; font-size:0.8rem; display:inline-flex; align-items:center; gap:4px;">
+            <svg style="width:13px; height:13px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            Refresh
+          </button>
+
           <a href="/" target="_blank" class="btn-view-site">
             <svg style="width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
             Lihat Website Publik
           </a>
-          <button class="btn-logout" id="logoutBtn">
-            <svg style="width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-            Keluar
-          </button>
         </div>
       </header>
 
@@ -248,6 +258,7 @@
   <div class="toast-container" id="toastContainer"></div>
 
   <!-- Scripts -->
+  <script src="js/localStore.js"></script>
   <script src="js/builder.js"></script>
   <script src="js/admin.js"></script>
 </body>

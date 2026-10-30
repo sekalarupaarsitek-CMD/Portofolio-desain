@@ -74,18 +74,33 @@ const BuilderEngine = {
      -------------------------------------------------------------------------- */
   async loadPage() {
     try {
-      this.setAutosaveStatus('Memuat halaman dari database...', 'saving');
+      this.setAutosaveStatus('Memuat halaman...', 'saving');
       const res = await AdminAPI.get(`/api/admin/pages/${this.pageKey}/builder?locale=${this.locale}`);
-      if (res.success && res.data) {
-        this.schema = res.data.content || { version: 1, layout: 'canva-hybrid-grid', sections: [] };
-        if (!this.schema.sections) this.schema.sections = [];
-        this.recordHistory('Muat Halaman');
-        this.setAutosaveStatus('✓ Tersimpan di database', 'saved');
+      if (res && res.data && res.data.content && res.data.content.sections && res.data.content.sections.length > 0) {
+        this.schema = res.data.content;
+      } else {
+        const local = localStorage.getItem(`builder_schema_${this.pageKey}_${this.locale}`);
+        if (local) {
+          try { this.schema = JSON.parse(local); } catch (e) {}
+        }
+        if (!this.schema.sections || this.schema.sections.length === 0) {
+          this.resetToLandingPageTemplate();
+          return;
+        }
       }
+      this.recordHistory('Muat Halaman');
+      this.setAutosaveStatus('✓ Siap Digunakan', 'saved');
     } catch (err) {
-      console.error('[Builder Load Error]', err);
-      AdminApp.showToast('Gagal memuat builder: ' + err.message, 'error');
-      this.setAutosaveStatus('Gagal memuat', '');
+      console.warn('[Builder Load Fallback]', err.message);
+      const local = localStorage.getItem(`builder_schema_${this.pageKey}_${this.locale}`);
+      if (local) {
+        try { this.schema = JSON.parse(local); } catch (e) {}
+      } else {
+        this.resetToLandingPageTemplate();
+        return;
+      }
+      this.recordHistory('Muat Halaman (Lokal)');
+      this.setAutosaveStatus('✓ Mode Mandiri (Browser)', 'saved');
     }
   },
 
