@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SEKALARUPA STUDIO | Content Management System & Visual Builder</title>
+  <meta name="description" content="Dashboard Administrasi dan Hybrid Visual Page Builder SEKALARUPA STUDIO. Kelola portofolio arsitektur, gambar, halaman, dan konfigurasi secara mandiri." />
+
+  <!-- Google Fonts: Editorial Serif & Clean Modern Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Architectural Design System & Landing Page Styles -->
+  <link rel="stylesheet" href="../css/style.css" />
+
+  <!-- Admin & Canva Builder Stylesheet -->
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body>
+
+  <!-- ========================================================================
+       1. Authentication / Initial Setup View (PRD Section 12 & 23.6)
+       ======================================================================== -->
+  <div class="auth-wrapper" id="authContainer" style="display: none;">
+    
+    <!-- Initial First Admin Setup Card -->
+    <div class="auth-card" id="setupCard" style="display: none;">
+      <div class="auth-logo">
+        <span class="title">SEKALARUPA</span>
+        <span class="subtitle">Studio Arsitektur & Perancangan</span>
+      </div>
+      <div style="text-align:center; margin-bottom:1.5rem;">
+        <h2 style="font-size:1.35rem; margin-bottom:0.35rem;">Setup Administrator Awal</h2>
+        <p style="font-size:0.82rem; color:var(--text-muted);">
+          Buat akun administrator pertama untuk mengelola website dan portofolio SEKALARUPA STUDIO.
+        </p>
+      </div>
+
+      <form id="setupForm">
+        <div class="form-group">
+          <label class="form-label">Nama Lengkap Administrator *</label>
+          <input type="text" id="setupFullName" class="form-input" required placeholder="Contoh: Principal Architect" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Administrator *</label>
+          <input type="email" id="setupEmail" class="form-input" required placeholder="admin@sekalarupa.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password *</label>
+          <input type="password" id="setupPassword" class="form-input" required minlength="8" placeholder="Minimal 8 karakter" />
+          <div class="form-hint">Gunakan kombinasi huruf, angka, dan simbol untuk keamanan maksimal.</div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Nomor Kontak WhatsApp (Opsional)</label>
+          <input type="tel" id="setupPhone" class="form-input" placeholder="087857523074" />
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:1rem; padding:0.85rem;">
+          Inisialisasi & Buka Dashboard
+        </button>
+      </form>
+    </div>
+
+    <!-- Regular Admin Login Card -->
+    <div class="auth-card" id="loginCard" style="display: none;">
+      <div class="auth-logo">
+        <span class="title">SEKALARUPA</span>
+        <span class="subtitle">CMS & Visual Builder</span>
+      </div>
+      <div style="text-align:center; margin-bottom:1.5rem;">
+        <h2 style="font-size:1.35rem; margin-bottom:0.35rem;">Masuk ke Dashboard</h2>
+        <p style="font-size:0.82rem; color:var(--text-muted);">
+          Akses terlindungi khusus administrator SEKALARUPA STUDIO.
+        </p>
+      </div>
+
+      <form id="loginForm">
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input type="email" id="loginEmail" class="form-input" required placeholder="admin@sekalarupa.com" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" id="loginPassword" class="form-input" required placeholder="••••••••" />
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:1rem; padding:0.85rem;">
+          Masuk Dashboard
+        </button>
+      </form>
+      <div style="text-align:center; margin-top:1.5rem;">
+        <a href="/" style="font-size:0.8rem; color:var(--text-muted);">← Kembali ke Website Publik</a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ========================================================================
+       2. Main Admin Application Shell (PRD Section 7)
+       ======================================================================== -->
+  <div class="admin-layout" id="appContainer" style="display: none;">
+    
+    <!-- Sidebar Navigation -->
+    <aside class="admin-sidebar">
+      <div class="sidebar-header">
+        <a href="#" class="sidebar-brand">
+          SEKALARUPA
+          <span>STUDIO CMS</span>
+        </a>
+      </div>
+
+      <ul class="sidebar-menu">
+        <li class="menu-section-label">UTAMA</li>
+        <li class="sidebar-item">
+          <a class="sidebar-link active" data-view="dashboard">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" data-view="builder">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+            <span>Visual Page Builder</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" data-view="inquiries">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <span>Konsultasi Masuk</span>
+          </a>
+        </li>
+
+        <li class="menu-section-label">MANAJEMEN KONTEN</li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" data-view="projects">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Portfolio Manager</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" data-view="services">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+            <span>Services Manager</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" data-view="deliverables">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+            <span>Output Deliverables</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" data-view="media">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+            <span>Media Library</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" data-view="journal">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            <span>Journal Articles</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" data-view="navigation">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+            <span>Menu Navigasi</span>
+          </a>
+        </li>
+
+        <li class="menu-section-label">PENGATURAN STUDIO</li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" data-view="theme">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a10 10 0 0 0 0 20v-20z"/></svg>
+            <span>Theme & Branding</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" data-view="settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+            <span>General Settings</span>
+          </a>
+        </li>
+        <li class="sidebar-item">
+          <a class="sidebar-link" data-view="backup">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            <span>Backup & Restore</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div>
+          <span style="display:block; font-size:0.75rem; color:#A3ACA8;">Logged in as:</span>
+          <span id="currentAdminName" style="font-weight:600; color:#FFF; font-size:0.82rem;">Administrator</span>
+        </div>
+        <span class="admin-badge">v1.0</span>
+      </div>
+    </aside>
+
+    <!-- Main View Column -->
+    <main class="admin-main">
+      <header class="admin-topbar">
+        <div class="topbar-left">
+          <h2 class="topbar-title" id="viewTitle">Dashboard</h2>
+        </div>
+        <div class="topbar-right">
+          <a href="/" target="_blank" class="btn-view-site">
+            <svg style="width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            Lihat Website Publik
+          </a>
+          <button class="btn-logout" id="logoutBtn">
+            <svg style="width:14px; height:14px;" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Keluar
+          </button>
+        </div>
+      </header>
+
+      <section class="admin-content" id="adminViewContent">
+        <!-- Rendered dynamically by AdminApp.navigate() -->
+      </section>
+    </main>
+
+  </div>
+
+  <!-- ========================================================================
+       3. Generic Modal Container
+       ======================================================================== -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle" style="font-size:1.15rem; font-family:var(--font-serif);">Modal Title</h3>
+        <button id="modalCloseBtn" style="background:none; border:none; font-size:1.25rem; cursor:pointer; color:var(--text-muted);">&times;</button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+      <div class="modal-footer" id="modalFooter"></div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Scripts -->
+  <script src="js/builder.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

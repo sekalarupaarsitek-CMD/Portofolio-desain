@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SEKALARUPA STUDIO | Architecture, Interior & Design Visualization</title>
+  <meta name="description" content="SEKALARUPA STUDIO merupakan studio arsitektur yang berfokus pada perancangan hunian modern, fungsional, dan estetis di pedesaan maupun perkotaan di seluruh Indonesia. Tatar Rupa Mawa Bagja." />
+  <meta name="keywords" content="arsitek bandung, arsitek indonesia, desain rumah modern, desain villa tropis, interior design, visualisasi 3d arsitektur, sekalarupa studio" />
+  <meta name="theme-color" content="#F5F3EE" />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="SEKALARUPA STUDIO | Architecture & Design" />
+  <meta property="og:description" content="Create a Home that brings happiness. Tatar Rupa Mawa Bagja." />
+  <meta property="og:image" content="assets/images/hero-architecture.jpg" />
+  <meta property="og:type" content="website" />
+
+  <!-- Google Fonts: Editorial Serif & Clean Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Architectural Stylesheet -->
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ========================================================================
+       1. Architectural Header & Main Navigation (PRD 5.1)
+       ======================================================================== -->
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="#home" class="brand-logo" id="headerLogo">
+        <span class="brand-title">SEKALARUPA</span>
+        <span class="brand-sub">STUDIO</span>
+      </a>
+
+      <!-- Desktop Navigation -->
+      <nav class="desktop-nav" id="desktopNav">
+        <a href="#home" class="nav-link active" data-i18n="navHome">Beranda</a>
+        <a href="#about" class="nav-link" data-i18n="introTag">Tentang</a>
+        <a href="#portfolio" class="nav-link" data-i18n="navPortfolio">Portofolio</a>
+        <a href="#services" class="nav-link" data-i18n="navServices">Layanan</a>
+        <a href="#philosophy" class="nav-link" data-i18n="navPhilosophy">Filosofi</a>
+        <a href="#deliverables" class="nav-link" data-i18n="navDeliverables">Deliverables</a>
+        <a href="#process" class="nav-link" data-i18n="navProcess">Tahapan</a>
+        <a href="#inquiry" class="nav-link" data-i18n="navContact">Kontak</a>
+      </nav>
+
+      <!-- Actions & Language Switcher & Theme Toggle -->
+      <div class="header-actions">
+        <!-- Theme Toggle (Mode Terang & Mode Gelap) -->
+        <button class="theme-toggle-btn" id="themeToggleBtn" aria-label="Ganti Mode Terang atau Gelap" title="Ganti Mode Terang atau Gelap">
+          <span class="theme-icon light-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+          </span>
+          <span class="theme-icon dark-icon" aria-hidden="true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </span>
+          <span class="theme-label" id="themeLabel">Mode Gelap</span>
+        </button>
+
+        <!-- Language Switcher (PRD 9.1) -->
+        <div class="lang-switcher" aria-label="Pilih Bahasa">
+          <button class="lang-btn active" data-lang="id" title="Bahasa Indonesia">ID</button>
+          <button class="lang-btn" data-lang="en" title="English">EN</button>
+        </div>
+
+        <!-- CTA Start a Project Button -->
+        <a href="#inquiry" class="btn btn-primary btn-sm" id="navStartProjectBtn" data-i18n="navStartProject">
+          Mulai Proyek &rarr;
+        </a>
+
+        <!-- Mobile Menu Toggle -->
+        <button class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Buka Menu Navigasi">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="3" y1="12" x2="21" y2="12"></line>
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="18" x2="21" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Mobile Drawer Menu -->
+  <aside class="mobile-drawer" id="mobileDrawer">
+    <div>
+      <div class="mobile-drawer-header">
+        <div class="brand-logo">
+          <span class="brand-title">SEKALARUPA</span>
+          <span class="brand-sub">STUDIO</span>
+        </div>
+        <button class="modal-close-btn" id="closeDrawerBtn" aria-label="Tutup Menu">&times;</button>
+      </div>
+      <nav class="mobile-nav-links">
+        <a href="#home" class="mobile-nav-link" data-i18n="navHome">Beranda</a>
+        <a href="#about" class="mobile-nav-link" data-i18n="introTag">Tentang Studio</a>
+        <a href="#portfolio" class="mobile-nav-link" data-i18n="navPortfolio">Portofolio</a>
+        <a href="#services" class="mobile-nav-link" data-i18n="navServices">Layanan</a>
+        <a href="#philosophy" class="mobile-nav-link" data-i18n="navPhilosophy">Filosofi</a>
+        <a href="#deliverables" class="mobile-nav-link" data-i18n="navDeliverables">Deliverables</a>
+        <a href="#process" class="mobile-nav-link" data-i18n="navProcess">Tahapan Kerja</a>
+        <a href="#inquiry" class="mobile-nav-link" data-i18n="navStartProject">Mulai Proyek</a>
+      </nav>
+    </div>
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <button class="btn btn-outline" id="mobileThemeToggleBtn" style="width: 100%; justify-content: center;">
+        <span id="mobileThemeLabel">Ganti ke Mode Gelap</span>
+      </button>
+      <a href="https://wa.me/6287857523074" target="_blank" class="btn btn-whatsapp" style="width: 100%;">
+        WhatsApp: 087857523074
+      </a>
+    </div>
+  </aside>
+
+  <main>
+    <!-- ======================================================================
+         2. Hero Section (PRD 5.2 Section 1)
+         ====================================================================== -->
+    <section id="home" class="hero-section">
+      <!-- Architectural Full-Bleed Background Container with Opacity Control -->
+      <div class="hero-backdrop-container">
+        <div class="hero-bg-image" id="heroBgImage"></div>
+        <div class="hero-bg-overlay" id="heroBgOverlay"></div>
+        <div class="hero-ambient-glow"></div>
+      </div>
+
+      <div class="container">
+        <div class="hero-grid">
+          <!-- Left: Hero Headline & CTAs -->
+          <div class="hero-content">
+            <div class="hero-badge-wrap">
+              <span class="hero-badge" data-i18n="heroBadge">Studio Arsitektur & Desain</span>
+              <span class="hero-philosophy-pill">Tatar Rupa Mawa Bagja</span>
+            </div>
+
+            <h1 class="hero-headline" data-i18n="heroHeadline">
+              Create a Home that <span class="highlight-word">brings happiness.</span>
+            </h1>
+
+            <p class="hero-subheadline" data-i18n="heroSubheadline">
+              Thoughtful architecture and design shaped by people, place, and purpose.
+            </p>
+
+            <div class="hero-ctas">
+              <a href="#portfolio" class="btn btn-primary" id="heroExploreBtn" data-i18n="heroCtaExplore">
+                Jelajahi Karya
+              </a>
+              <a href="#inquiry" class="btn btn-outline" id="heroStartBtn" data-i18n="heroCtaStart">
+                Konsultasi Proyek &rarr;
+              </a>
+            </div>
+
+            <!-- Real-time Background Opacity Controller Pill -->
+            <div class="hero-bg-opacity-control" id="bgOpacityControl" title="Sesuaikan Opacity Background Beranda">
+              <span class="opacity-label">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M12 2a10 10 0 0 0 0 20z"></path>
+                </svg>
+                <span data-i18n="bgOpacityLabel">Opacity Latar:</span>
+                <strong id="opacityValDisplay">86%</strong>
+              </span>
+              <input type="range" class="opacity-slider-input" id="bgOpacitySlider" min="20" max="98" value="86" step="2" aria-label="Pengatur Opacity Background" />
+            </div>
+          </div>
+
+          <!-- Right: Hero Visual Frame -->
+          <div class="hero-visual">
+            <div class="hero-image-frame">
+              <img src="assets/images/hero-night-residence.jpg" alt="Nocturne Pine Pavilion - SEKALARUPA STUDIO" id="heroVisualImg" />
+            </div>
+            <!-- Floating Project Spec Card -->
+            <div class="hero-image-card">
+              <div class="hero-card-project-title">Nocturne Pine Pavilion</div>
+              <div class="hero-card-meta">
+                <span>Lembang, Bandung</span>
+                <span>•</span>
+                <span>520 m²</span>
+                <span>•</span>
+                <span>Highland Sanctuary</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Studio Highlights Ribbon -->
+        <div class="hero-ribbon">
+          <div class="ribbon-grid">
+            <div class="ribbon-item">
+              <div class="ribbon-item-num" data-i18n="heroStats1">100% Desain Kustom</div>
+              <div class="ribbon-item-desc" data-i18n="heroStats1Desc">Sesuai kebutuhan & karakter lahan unik Anda</div>
+            </div>
+            <div class="ribbon-item">
+              <div class="ribbon-item-num" data-i18n="heroStats2">Pedesaan & Perkotaan</div>
+              <div class="ribbon-item-desc" data-i18n="heroStats2Desc">Jangkauan perancangan seluruh wilayah Indonesia</div>
+            </div>
+            <div class="ribbon-item">
+              <div class="ribbon-item-num" data-i18n="heroStats3">6 Disiplin Desain</div>
+              <div class="ribbon-item-desc" data-i18n="heroStats3Desc">Arsitektur, interior, fasad hingga visualisasi 3D</div>
+            </div>
+            <div class="ribbon-item">
+              <div class="ribbon-item-num" data-i18n="heroStats4">Handover Lengkap</div>
+              <div class="ribbon-item-desc" data-i18n="heroStats4Desc">Gambar kerja, RAB, hingga photobook hardcover</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         3. Studio Introduction & Core Values (PRD 5.2 Section 2 & 1.2)
+         ====================================================================== -->
+    <section id="about" class="intro-section">
+      <div class="container">
+        <div class="intro-editorial-grid">
+          <div>
+            <span class="section-tag" data-i18n="introTag">Tentang Studio</span>
+            <h2 class="section-title" data-i18n="introTitle">
+              Arsitektur yang Bernyawa, Menghormati Alam & Memuliakan Kehidupan.
+            </h2>
+          </div>
+          <div class="intro-narrative">
+            <p class="text-editorial-lead" data-i18n="introParagraph1">
+              SEKALARUPA STUDIO merupakan studio arsitektur yang berfokus pada perancangan hunian modern, fungsional, dan estetis. Kami melayani kebutuhan desain untuk lanskap pedesaan yang asri maupun perkotaan yang dinamis di seluruh nusantara.
+            </p>
+            <p data-i18n="introParagraph2">
+              Kami percaya bahwa setiap ruang memiliki cerita dan karakter tersendiri. Berakar pada filosofi lokal Tatar Rupa Mawa Bagja, setiap garis rancang kami ditujukan untuk menghadirkan kebahagiaan sejati bagi pemiliknya.
+            </p>
+            <div class="intro-quote-card">
+              <div class="intro-quote-text">"Tatar Rupa Mawa Bagja."</div>
+              <div class="intro-quote-author">Menciptakan ruang dan hunian yang membawa kebahagiaan</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4 Core Brand Values Grid -->
+        <div class="values-grid" id="valuesGrid">
+          <!-- Rendered dynamically by main.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         4. Featured Projects Showcase (PRD 5.2 Section 3 & 5.3)
+         ====================================================================== -->
+    <section id="portfolio" class="projects-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag" data-i18n="worksTag">Portofolio Pilihan</span>
+          <h2 class="section-title" data-i18n="worksTitle">Karya Arsitektur & Ruang Terpilih</h2>
+          <p class="section-subtitle" data-i18n="worksSubtitle">
+            Koleksi perancangan hunian privat, paviliun peristirahatan, interior hangat, dan ruang komersial kontemporer.
+          </p>
+        </div>
+
+        <!-- Filter Bar -->
+        <div class="projects-filter-bar">
+          <button class="filter-btn active" data-filter="all" data-i18n="filterAll">Semua Karya</button>
+          <button class="filter-btn" data-filter="architecture" data-i18n="filterArch">Arsitektur</button>
+          <button class="filter-btn" data-filter="interior" data-i18n="filterInterior">Interior</button>
+          <button class="filter-btn" data-filter="exterior" data-i18n="filterExterior">Eksterior</button>
+          <button class="filter-btn" data-filter="commercial" data-i18n="filterCommercial">Komersial</button>
+        </div>
+
+        <!-- Asymmetrical Project Grid -->
+        <div class="projects-grid" id="projectsGrid">
+          <!-- Rendered dynamically by main.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         5. Services Section (PRD 5.2 Section 4 & 4.1, 4.3)
+         ====================================================================== -->
+    <section id="services" class="services-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag" data-i18n="servicesTag">Layanan Desain</span>
+          <h2 class="section-title" data-i18n="servicesTitle">Keahlian Perancangan Multi-Disiplin</h2>
+          <p class="section-subtitle" data-i18n="servicesSubtitle">
+            Setiap proyek memiliki keunikan tersendiri. Kami menyediakan layanan kustom yang fleksibel sesuai kebutuhan spesifik Anda.
+          </p>
+        </div>
+
+        <!-- 6 Core Services Grid -->
+        <div class="services-grid" id="servicesGrid">
+          <!-- Rendered dynamically by main.js -->
+        </div>
+
+        <!-- Construction Clarification Notice (PRD 4.3) -->
+        <div class="construction-notice-box">
+          <div class="construction-icon">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
+            </svg>
+          </div>
+          <div class="construction-notice-content">
+            <h4 data-i18n="constructionNoteTitle">Catatan Mengenai Pembangunan Fisik (Konstruksi)</h4>
+            <p data-i18n="constructionNoteBody">
+              Fokus utama SEKALARUPA STUDIO adalah jasa perancangan dan perencanaan desain komprehensif. Untuk pelaksanaan fisik / pembangunan konstruksi di lapangan, studio dapat memberikan konsultasi dan koordinasi langsung sesuai kesepakatan proyek.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         6. Design Philosophy & Tatar Rupa Mawa Bagja (PRD 5.2 Section 5 & 1.2)
+         ====================================================================== -->
+    <section id="philosophy" class="philosophy-section">
+      <div class="container">
+        <div class="philosophy-grid">
+          <div>
+            <span class="section-tag philosophy-tag" data-i18n="philosophyTag">Filosofi Desain</span>
+            <h2 class="philosophy-headline" data-i18n="philosophyTitle">Tatar Rupa Mawa Bagja</h2>
+            <div class="philosophy-subheading" data-i18n="philosophySubtitle">
+              Menciptakan ruang dan tata hunian yang membawa kebahagiaan.
+            </div>
+            <p class="philosophy-body" data-i18n="philosophyBody1">
+              Dalam kebudayaan Nusantara, tata ruang bukan sekadar dinding dan atap. Tatar Rupa adalah seni menata wujud fisik agar selaras dengan ritme alam dan denyut kehidupan penghuni.
+            </p>
+            <p class="philosophy-body" data-i18n="philosophyBody2">
+              Mawa Bagja adalah tujuannya: menghadirkan kebahagiaan mendalam, ketenangan batin saat pulang ke rumah, dan kehangatan abadi bagi generasi yang bertumbuh di dalamnya.
+            </p>
+            <div style="margin-top: 32px;">
+              <a href="#inquiry" class="btn btn-outline" style="color: #FFFFFF; border-color: var(--accent-sand);">
+                Mulai Diskusi Desain &rarr;
+              </a>
+            </div>
+          </div>
+
+          <div class="philosophy-visual">
+            <div class="philosophy-img-frame">
+              <img src="assets/images/project-facade-detail.jpg" alt="Filosofi Tatar Rupa Mawa Bagja - Roster Screen" />
+            </div>
+            <div class="philosophy-card-quote">
+              <p>"Setiap ruang memiliki cerita dan karakter tersendiri yang lahir dari manusia dan alam sekitarnya."</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         7. Deliverables Showcase (PRD 4.2 & 5.2 Section 6)
+         ====================================================================== -->
+    <section id="deliverables" class="deliverables-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag" data-i18n="deliverablesTag">Output & Standar Penyerahan</span>
+          <h2 class="section-title" data-i18n="deliverablesTitle">Apa yang Anda Dapatkan dalam Setiap Proyek</h2>
+          <p class="section-subtitle" data-i18n="deliverablesSubtitle">
+            Setiap proyek diselesaikan dengan paket dokumen profesional, visualisasi fotorealistik, dan buku eksklusif cetak.
+          </p>
+        </div>
+
+        <div class="deliverables-layout">
+          <!-- 4 Boxes Grid -->
+          <div class="deliverables-grid">
+            <div class="deliverable-box">
+              <h4>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 19l7-7 3 3-7 7-3-3z"></path><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"></path></svg>
+                Pengembangan Desain
+              </h4>
+              <ul>
+                <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Alternatif denah tata ruang fungsional</li>
+                <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Alternatif desain fasad & massa bangunan</li>
+                <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Moodboard material & pencahayaan</li>
+              </ul>
+            </div>
+
+            <div class="deliverable-box">
+              <h4>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line></svg>
+                Visualisasi 3D
+              </h4>
+              <ul>
+                <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Render eksterior resolusi ultra tinggi</li>
+                <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Render setiap ruangan interior</li>
+                <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Video cinematic walkthrough 2-3 menit</li>
+              </ul>
+            </div>
+
+            <div class="deliverable-box">
+              <h4>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line></svg>
+                Dokumentasi Teknis
+              </h4>
+              <ul>
+                <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Master file 3D SketchUp (.skp) rapi</li>
+                <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Gambar kerja denah, tampak & potongan</li>
+                <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Rencana Anggaran Biaya (RAB)</li>
+              </ul>
+            </div>
+
+            <div class="deliverable-box">
+              <h4>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                Penyerahan Hasil
+              </h4>
+              <ul>
+                <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Digital Cloud Archive (Google Drive)</li>
+                <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> PDF master presentation lengkap</li>
+                <li><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg> Hardcover Photobook eksklusif cetak</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Photobook Image Showcase -->
+          <div class="deliverables-media-col">
+            <div class="deliverables-img-frame">
+              <img src="assets/images/deliverables-photobook.jpg" alt="SEKALARUPA Deliverables - Hardcover Photobook & Blueprints" />
+            </div>
+            <div class="deliverables-badge-callout">
+              <h5>Buku Hardcover Eksklusif</h5>
+              <p>Setiap klien menerima cinderamata photobook mewah yang mendokumentasikan karya rancangan hunian Anda.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         8. Design Process (PRD 5.2 Section 7)
+         ====================================================================== -->
+    <section id="process" class="process-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag" data-i18n="processTag">Metodologi Kerja</span>
+          <h2 class="section-title" data-i18n="processTitle">Tahapan Menghadirkan Ruang Impian Anda</h2>
+          <p class="section-subtitle" data-i18n="processSubtitle">
+            Langkah terstruktur dan transparan dari awal diskusi hingga penyerahan berkas siap bangun.
+          </p>
+        </div>
+
+        <div class="process-timeline" id="processTimeline">
+          <!-- Rendered dynamically by main.js -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================================================================
+         9. Interactive Project Inquiry System & WhatsApp Generator (PRD Section 6)
+         ====================================================================== -->
+    <section id="inquiry" class="inquiry-section">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag" data-i18n="inquiryTag">Mulai Proyek Anda</span>
+          <h2 class="section-title" data-i18n="inquiryTitle">Mari Bicarakan Ruang Impian Anda</h2>
+          <p class="section-subtitle" data-i18n="inquirySubtitle">
+            Isi formulir ringkas di bawah ini. Sistem kami akan menyusun pesan kebutuhan proyek Anda dan membukanya langsung di WhatsApp untuk berdiskusi dengan tim studio.
+          </p>
+        </div>
+
+        <div class="inquiry-grid">
+          <!-- Form Card -->
+          <div class="inquiry-form-card">
+            <form id="inquiryForm" onsubmit="return false;">
+              <!-- Name & Email -->
+              <div class="form-group-grid">
+                <div class="form-group">
+                  <label class="form-label" for="clientName" data-i18n="formName">Nama Lengkap *</label>
+                  <input type="text" id="clientName" class="form-input" placeholder="Contoh: Arga Pratama" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="clientEmail" data-i18n="formEmail">Alamat Email *</label>
+                  <input type="email" id="clientEmail" class="form-input" placeholder="arga@example.com" required />
+                </div>
+              </div>
+
+              <!-- Phone & Project Type -->
+              <div class="form-group-grid">
+                <div class="form-group">
+                  <label class="form-label" for="clientPhone" data-i18n="formPhone">Nomor WhatsApp / Telepon *</label>
+                  <input type="tel" id="clientPhone" class="form-input" placeholder="081234567890" required />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="projectType" data-i18n="formType">Tipe Proyek *</label>
+                  <select id="projectType" class="form-select">
+                    <option value="Hunian Pribadi / Rumah Tinggal">Hunian Pribadi / Rumah Tinggal</option>
+                    <option value="Villa / Peristirahatan Pedesaan">Villa / Peristirahatan Pedesaan</option>
+                    <option value="Komersial (Kafe / Restoran / Toko)">Komersial (Kafe / Restoran / Toko)</option>
+                    <option value="Hospitality & Penginapan">Hospitality & Penginapan</option>
+                    <option value="Kantor / Workspace">Kantor / Workspace</option>
+                    <option value="Renovasi & Perluasan Bangunan">Renovasi & Perluasan Bangunan</option>
+                    <option value="Custom Lainnya">Custom Lainnya</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Service Pills Multi-select (PRD 6.2) -->
+              <div class="form-group">
+                <label class="form-label" data-i18n="formServices">Layanan yang Dibutuhkan * (Pilih satu atau lebih)</label>
+                <div class="service-pills">
+                  <label class="service-pill-label checked">
+                    <input type="checkbox" value="architecture" data-name="Arsitektur" checked />
+                    <span>Arsitektur</span>
+                  </label>
+                  <label class="service-pill-label">
+                    <input type="checkbox" value="exterior" data-name="Fasad & Eksterior" />
+                    <span>Fasad & Eksterior</span>
+                  </label>
+                  <label class="service-pill-label">
+                    <input type="checkbox" value="interior" data-name="Interior Design" />
+                    <span>Interior</span>
+                  </label>
+                  <label class="service-pill-label">
+                    <input type="checkbox" value="furniture" data-name="Furniture Custom" />
+                    <span>Furniture Custom</span>
+                  </label>
+                  <label class="service-pill-label">
+                    <input type="checkbox" value="product" data-name="Product Design" />
+                    <span>Desain Produk</span>
+                  </label>
+                  <label class="service-pill-label">
+                    <input type="checkbox" value="visualization" data-name="Visualisasi 3D" />
+                    <span>Visualisasi 3D</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Location & Land Area -->
+              <div class="form-group-grid">
+                <div class="form-group">
+                  <label class="form-label" for="projectLocation" data-i18n="formLocation">Lokasi Proyek (Kota / Karakter Lahan) *</label>
+                  <input type="text" id="projectLocation" class="form-input" placeholder="Contoh: Bandung Barat / Area Perbukitan" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="landArea" data-i18n="formLandArea">Estimasi Luas Lahan (m²)</label>
+                  <input type="number" id="landArea" class="form-input" placeholder="Contoh: 350" />
+                </div>
+              </div>
+
+              <!-- Building Area & Budget -->
+              <div class="form-group-grid">
+                <div class="form-group">
+                  <label class="form-label" for="buildingArea" data-i18n="formBuildingArea">Estimasi Luas Bangunan (m²)</label>
+                  <input type="number" id="buildingArea" class="form-input" placeholder="Contoh: 280" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="estimatedBudget" data-i18n="formBudget">Estimasi Rencana Anggaran Desain</label>
+                  <select id="estimatedBudget" class="form-select">
+                    <option value="Konsultasi Terbuka">Konsultasi Terbuka / Disesuaikan</option>
+                    <option value="Di bawah 50 Juta">Di bawah 50 Juta</option>
+                    <option value="50 - 100 Juta">50 - 100 Juta</option>
+                    <option value="100 - 250 Juta">100 - 250 Juta</option>
+                    <option value="Di atas 250 Juta">Di atas 250 Juta</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Construction & Reference Link -->
+              <div class="form-group-grid">
+                <div class="form-group">
+                  <label class="form-label" for="constructionRequirement" data-i18n="formConstruction">Kebutuhan Layanan Konstruksi?</label>
+                  <select id="constructionRequirement" class="form-select">
+                    <option value="Jasa Desain Saja">Jasa Desain Saja (Arsitektur & DED)</option>
+                    <option value="Desain + Ingin Konsultasi Pembangunan Fisik">Desain + Ingin Konsultasi Pembangunan Fisik</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="referenceLink" data-i18n="formRefLink">Tautan Referensi (Pinterest, IG, Google Drive)</label>
+                  <input type="url" id="referenceLink" class="form-input" placeholder="https://pinterest.com/..." />
+                </div>
+              </div>
+
+              <!-- Notes / Description -->
+              <div class="form-group">
+                <label class="form-label" for="projectNotes" data-i18n="formNotes">Ceritakan Kebutuhan & Impian Hunian Anda *</label>
+                <textarea id="projectNotes" class="form-textarea" placeholder="Contoh: Kami ingin membangun hunian tropis yang ramah lanskap, memiliki taman dalam (courtyard), sirkulasi udara alami yang segar, dan ruang berkumpul keluarga yang luas."></textarea>
+              </div>
+
+              <button type="button" id="sendWaBtn" class="btn btn-whatsapp" style="width: 100%; padding: 16px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                <span data-i18n="btnSendWa">Kirim via WhatsApp Resmi</span>
+              </button>
+            </form>
+          </div>
+
+          <!-- WhatsApp Live Preview Card -->
+          <div class="inquiry-preview-card">
+            <div class="preview-badge-header">
+              <span class="preview-badge-title" data-i18n="formSummaryHeader">Pratinjau Pesan WhatsApp Otomatis</span>
+              <span style="font-size: 0.75rem; color: #1FAF59; font-weight: 600;">● Live Preview</span>
+            </div>
+
+            <!-- WhatsApp Message Preview Box -->
+            <div class="wa-bubble-preview" id="waPreviewBox">
+              <!-- Composed dynamically by main.js -->
+            </div>
+
+            <div class="wa-notice-box" data-i18n="formNotice">
+              Pesan akan dibuka di aplikasi WhatsApp atau WhatsApp Web Anda untuk Anda tinjau sebelum menekan tombol Kirim.
+            </div>
+
+            <div style="font-size: 0.85rem; color: var(--text-muted); text-align: center;">
+              WhatsApp Resmi: <strong style="color: var(--accent-charcoal);">087857523074</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ========================================================================
+       10. Footer Section (PRD 5.2 Section 9 & 16)
+       ======================================================================== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top-grid">
+        <!-- Col 1: Studio Brand & Philosophy -->
+        <div class="footer-brand">
+          <div class="brand-title">SEKALARUPA</div>
+          <div class="brand-sub">STUDIO ARCHITECTURE</div>
+          <p class="footer-desc" data-i18n="footerDesc">
+            Studio arsitektur berdedikasi menciptakan hunian modern, fungsional, dan estetis yang menghadirkan kebahagiaan.
+          </p>
+          <div style="font-family: var(--font-serif); font-style: italic; color: var(--accent-sand); font-size: 1.05rem;">
+            "Tatar Rupa Mawa Bagja"
+          </div>
+        </div>
+
+        <!-- Col 2: Navigation Links -->
+        <div>
+          <div class="footer-col-title" data-i18n="footerQuickLinks">Tautan Cepat</div>
+          <ul class="footer-link-list">
+            <li><a href="#home" data-i18n="navHome">Beranda</a></li>
+            <li><a href="#about" data-i18n="introTag">Tentang Kami</a></li>
+            <li><a href="#portfolio" data-i18n="navPortfolio">Portofolio Proyek</a></li>
+            <li><a href="#philosophy" data-i18n="navPhilosophy">Filosofi Desain</a></li>
+            <li><a href="#deliverables" data-i18n="navDeliverables">Output Penyerahan</a></li>
+            <li><a href="#process" data-i18n="navProcess">Tahapan Kerja</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Services -->
+        <div>
+          <div class="footer-col-title" data-i18n="footerServices">Layanan</div>
+          <ul class="footer-link-list">
+            <li><a href="#services">Perancangan Arsitektur</a></li>
+            <li><a href="#services">Fasad & Eksterior</a></li>
+            <li><a href="#services">Perancangan Interior</a></li>
+            <li><a href="#services">Furniture Custom</a></li>
+            <li><a href="#services">Desain Produk</a></li>
+            <li><a href="#services">Visualisasi 3D</a></li>
+          </ul>
+        </div>
+
+        <!-- Col 4: Studio Contact (PRD 16) -->
+        <div>
+          <div class="footer-col-title" data-i18n="footerContact">Hubungi Studio</div>
+          <div class="footer-contact-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+            <div>
+              <strong>WhatsApp:</strong><br />
+              <a href="https://wa.me/6287857523074" target="_blank" style="color: #FFFFFF;">087857523074</a>
+            </div>
+          </div>
+          <div class="footer-contact-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg>
+            <div>
+              <strong>Instagram:</strong><br />
+              <a href="https://instagram.com/sekalarupa.arsitek" target="_blank" style="color: #FFFFFF;">@sekalarupa.arsitek</a>
+            </div>
+          </div>
+          <div class="footer-contact-item">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <div>
+              <strong>Jangkauan Layanan:</strong><br />
+              Pedesaan & Perkotaan Seluruh Indonesia
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Copyright Bar -->
+      <div class="footer-bottom-bar">
+        <div>
+          &copy; 2026 SEKALARUPA STUDIO. <span data-i18n="footerCopyright">Hak Cipta Dilindungi Undang-Undang.</span>
+        </div>
+        <div>
+          Tatar Rupa Mawa Bagja &middot; Create a Home that brings happiness. &middot; <a href="/admin" target="_blank" style="color:inherit; opacity:0.6; text-decoration:underline; margin-left:6px;" title="Portal Administrasi Studio">CMS Portal &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ========================================================================
+       11. Project Quick-View Modal
+       ======================================================================== -->
+  <div class="modal-overlay" id="projectModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog">
+      <button class="modal-close-btn" id="modalCloseBtn" aria-label="Tutup Dialog">&times;</button>
+      <div class="modal-body" id="modalBody">
+        <!-- Rendered dynamically by main.js -->
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================================
+       12. Floating WhatsApp Consultation Button
+       ======================================================================== -->
+  <a href="https://wa.me/6287857523074" target="_blank" rel="noopener noreferrer" class="floating-wa-btn" title="Konsultasi Langsung via WhatsApp" id="floatingWaBtn">
+    <div class="pulse-ring"></div>
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+    </svg>
+  </a>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/main.js"></script>
+</body>
+</html>
