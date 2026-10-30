@@ -4,7 +4,14 @@
  * Uses Node 24 native SQLite with WAL mode & foreign keys enabled.
  */
 
-const { DatabaseSync } = require('node:sqlite');
+let DatabaseSync;
+try {
+  ({ DatabaseSync } = require('node:sqlite'));
+} catch (e) {
+  const errMsg = `[CRITICAL ERROR] Modul 'node:sqlite' tidak ditemukan! Versi Node.js runtime: ${process.version}. Sistem membutuhkan Node.js 22.x (v22.5.0+). Silakan ubah Node.js Version ke '22.x' di Dashboard Vercel (Settings -> General -> Node.js Version).`;
+  console.error(errMsg);
+  throw new Error(errMsg);
+}
 const path = require('path');
 const fs = require('fs');
 const { SQL_SCHEMA } = require('./schema');
