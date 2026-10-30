@@ -7,13 +7,16 @@ const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
 const bcrypt = require('bcryptjs');
-const { get, run, all } = require('./index');
+const { get, run, all, getInitPromise } = require('./index');
 
 function generateId(prefix = 'id') {
   return `${prefix}_${crypto.randomBytes(8).toString('hex')}`;
 }
 
 async function seedDatabase() {
+  if (typeof getInitPromise === 'function') {
+    await getInitPromise();
+  }
   console.log('[Seeder] Checking if database needs initial seeding...');
 
   // 0. Ensure Default Superadministrator Exists (PRD Section 23.6)

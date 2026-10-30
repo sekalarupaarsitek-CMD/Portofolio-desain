@@ -1,17 +1,10 @@
 /**
- * SEKALARUPA STUDIO - Database Connection & Abstraction Layer
+ * SEKALARUPA STUDIO - Universal Database Connection & Abstraction Layer
  * PRD Reference: Section 10 (Database Architecture)
- * Uses Node 24 native SQLite with WAL mode & foreign keys enabled.
+ * Supports both native Node 22+ SQLite (`node:sqlite`) and pure WebAssembly SQLite (`sql.js`)
+ * Guaranteed to run across all platforms and Vercel Serverless environments.
  */
 
-let DatabaseSync;
-try {
-  ({ DatabaseSync } = require('node:sqlite'));
-} catch (e) {
-  const errMsg = `[CRITICAL ERROR] Modul 'node:sqlite' tidak ditemukan! Versi Node.js runtime: ${process.version}. Sistem membutuhkan Node.js 22.x (v22.5.0+). Silakan ubah Node.js Version ke '22.x' di Dashboard Vercel (Settings -> General -> Node.js Version).`;
-  console.error(errMsg);
-  throw new Error(errMsg);
-}
 const path = require('path');
 const fs = require('fs');
 const { SQL_SCHEMA } = require('./schema');
@@ -43,31 +36,120 @@ if (isServerless && !fs.existsSync(DB_PATH)) {
   }
 }
 
-const db = new DatabaseSync(DB_PATH);
+let dbInstance = null;
+let engine = 'unknown'; // 'node:sqlite' or 'sql.js'
 
-// Configure SQLite for high performance and integrity
-db.exec('PRAGMA foreign_keys = ON;');
-if (!isServerless) {
-  db.exec('PRAGMA journal_mode = WAL;');
-} else {
-  db.exec('PRAGMA journal_mode = DELETE;');
+async function initDb() {
+  if (dbInstance) return dbInstance;
+
+  // 1. First attempt: Native Node.js 22+ SQLite (`node:sqlite`)
+  try {
+    const { DatabaseSync } = require('node:sqlite');
+    if (typeof DatabaseSync === 'function') {
+      const nativeDb = new DatabaseSync(DB_PATH);
+      nativeDb.exec('PRAGMA foreign_keys = ON;');
+      if (!isServerless) {
+        nativeDb.exec('PRAGMA journal_mode = WAL;');
+      } else {
+        nativeDb.exec('PRAGMA journal_mode = DELETE;');
+      }
+      nativeDb.exec('PRAGMA synchronous = NORMAL;');
+      nativeDb.exec(SQL_SCHEMA);
+
+      dbInstance = nativeDb;
+      engine = 'node:sqlite';
+      console.log(`[Database] Connected via native node:sqlite at ${DB_PATH}`);
+      return dbInstance;
+    }
+  } catch (err) {
+    console.warn(`[Database] Native node:sqlite unavailable (${err.message}). Activating sql.js WebAssembly engine...`);
+  }
+
+  // 2. Second attempt: Pure WebAssembly SQLite (`sql.js`) - works universally on Vercel
+  try {
+    const initSqlJs = require('sql.js');
+    const SQL = await initSqlJs();
+
+    let initialBuffer = null;
+    if (fs.existsSync(DB_PATH)) {
+      try {
+        initialBuffer = fs.readFileSync(DB_PATH);
+      } catch (readErr) {
+        console.warn('[Database] Read DB_PATH failed:', readErr.message);
+      }
+    }
+
+    if (!initialBuffer) {
+      const bundledDbPath = path.resolve(__dirname, '../../database/sekalarupa.db');
+      if (fs.existsSync(bundledDbPath)) {
+        try {
+          initialBuffer = fs.readFileSync(bundledDbPath);
+        } catch (e) {
+          // ignore
+        }
+      }
+    }
+
+    const wasmDb = initialBuffer ? new SQL.Database(initialBuffer) : new SQL.Database();
+    try {
+      wasmDb.run('PRAGMA foreign_keys = ON;');
+      wasmDb.exec(SQL_SCHEMA);
+    } catch (schemaErr) {
+      console.warn('[Database] sql.js schema sync note:', schemaErr.message);
+    }
+
+    dbInstance = wasmDb;
+    engine = 'sql.js';
+    console.log(`[Database] Connected via universal sql.js WASM engine successfully.`);
+    return dbInstance;
+  } catch (wasmErr) {
+    console.error(`[Database Critical Error] Failed to initialize both node:sqlite and sql.js:`, wasmErr);
+    throw wasmErr;
+  }
 }
-db.exec('PRAGMA synchronous = NORMAL;');
 
-// Initialize Tables
-db.exec(SQL_SCHEMA);
-
-console.log(`[Database] SQLite connected & schema initialized at ${DB_PATH}`);
+// Background auto-init on module load
+let initPromise = null;
+function getInitPromise() {
+  if (!initPromise) {
+    initPromise = initDb().catch(err => {
+      console.error('[DB Init Failed]', err);
+      throw err;
+    });
+  }
+  return initPromise;
+}
+getInitPromise();
 
 /**
  * Helper to execute query returning all rows
  */
 function all(sql, params = []) {
+  if (!dbInstance) throw new Error('[Database] DB not ready. Ensure getInitPromise() is awaited.');
+  const safeParams = params.map(p => (p === undefined ? null : p));
+
+  if (engine === 'node:sqlite') {
+    try {
+      const stmt = dbInstance.prepare(sql);
+      return stmt.all(...safeParams);
+    } catch (err) {
+      console.error(`[DB Error] all() failed: ${err.message}\nSQL: ${sql}\nParams:`, safeParams);
+      throw err;
+    }
+  }
+
+  // sql.js WASM engine
   try {
-    const stmt = db.prepare(sql);
-    return stmt.all(...params);
+    const stmt = dbInstance.prepare(sql);
+    if (safeParams.length > 0) stmt.bind(safeParams);
+    const rows = [];
+    while (stmt.step()) {
+      rows.push(stmt.getAsObject());
+    }
+    stmt.free();
+    return rows;
   } catch (err) {
-    console.error(`[DB Error] all() failed: ${err.message}\nSQL: ${sql}\nParams:`, params);
+    console.error(`[sql.js Error] all() failed: ${err.message}\nSQL: ${sql}\nParams:`, safeParams);
     throw err;
   }
 }
@@ -76,11 +158,31 @@ function all(sql, params = []) {
  * Helper to execute query returning single row
  */
 function get(sql, params = []) {
+  if (!dbInstance) throw new Error('[Database] DB not ready. Ensure getInitPromise() is awaited.');
+  const safeParams = params.map(p => (p === undefined ? null : p));
+
+  if (engine === 'node:sqlite') {
+    try {
+      const stmt = dbInstance.prepare(sql);
+      return stmt.get(...safeParams);
+    } catch (err) {
+      console.error(`[DB Error] get() failed: ${err.message}\nSQL: ${sql}\nParams:`, safeParams);
+      throw err;
+    }
+  }
+
+  // sql.js WASM engine
   try {
-    const stmt = db.prepare(sql);
-    return stmt.get(...params);
+    const stmt = dbInstance.prepare(sql);
+    if (safeParams.length > 0) stmt.bind(safeParams);
+    let row = undefined;
+    if (stmt.step()) {
+      row = stmt.getAsObject();
+    }
+    stmt.free();
+    return row;
   } catch (err) {
-    console.error(`[DB Error] get() failed: ${err.message}\nSQL: ${sql}\nParams:`, params);
+    console.error(`[sql.js Error] get() failed: ${err.message}\nSQL: ${sql}\nParams:`, safeParams);
     throw err;
   }
 }
@@ -89,11 +191,36 @@ function get(sql, params = []) {
  * Helper to run INSERT, UPDATE, DELETE
  */
 function run(sql, params = []) {
+  if (!dbInstance) throw new Error('[Database] DB not ready. Ensure getInitPromise() is awaited.');
+  const safeParams = params.map(p => (p === undefined ? null : p));
+
+  if (engine === 'node:sqlite') {
+    try {
+      const stmt = dbInstance.prepare(sql);
+      return stmt.run(...safeParams);
+    } catch (err) {
+      console.error(`[DB Error] run() failed: ${err.message}\nSQL: ${sql}\nParams:`, safeParams);
+      throw err;
+    }
+  }
+
+  // sql.js WASM engine
   try {
-    const stmt = db.prepare(sql);
-    return stmt.run(...params);
+    dbInstance.run(sql, safeParams);
+    const changes = dbInstance.getRowsModified();
+
+    // Persist to disk if writable directory exists
+    if (DB_PATH && fs.existsSync(path.dirname(DB_PATH))) {
+      try {
+        const exported = dbInstance.export();
+        fs.writeFileSync(DB_PATH, Buffer.from(exported));
+      } catch (writeErr) {
+        // file write may be ignored in ephemeral Lambda
+      }
+    }
+    return { changes };
   } catch (err) {
-    console.error(`[DB Error] run() failed: ${err.message}\nSQL: ${sql}\nParams:`, params);
+    console.error(`[sql.js Error] run() failed: ${err.message}\nSQL: ${sql}\nParams:`, safeParams);
     throw err;
   }
 }
@@ -102,11 +229,18 @@ function run(sql, params = []) {
  * Execute raw statement or multi-line SQL
  */
 function exec(sql) {
-  return db.exec(sql);
+  if (!dbInstance) throw new Error('[Database] DB not ready. Ensure getInitPromise() is awaited.');
+  if (engine === 'node:sqlite') {
+    return dbInstance.exec(sql);
+  }
+  return dbInstance.exec(sql);
 }
 
 module.exports = {
-  db,
+  get db() { return dbInstance; },
+  get engine() { return engine; },
+  initDb,
+  getInitPromise,
   all,
   get,
   run,

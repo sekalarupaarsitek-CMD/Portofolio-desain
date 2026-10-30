@@ -10,6 +10,7 @@ const path = require('path');
 const fs = require('fs');
 
 const { seedDatabase } = require('./db/seed');
+const { getInitPromise, engine } = require('./db');
 const authRoutes = require('./routes/authRoutes');
 const publicRoutes = require('./routes/publicRoutes');
 const adminRoutes = require('./routes/adminRoutes');
@@ -32,13 +33,17 @@ if (!fs.existsSync(uploadsDir)) {
 let seedPromise = null;
 function getSeedPromise() {
   if (!seedPromise) {
-    seedPromise = seedDatabase().catch(err => {
+    seedPromise = (async () => {
+      await getInitPromise();
+      await seedDatabase();
+    })().catch(err => {
       console.error('[Seeder Failed]', err);
     });
   }
   return seedPromise;
 }
 getSeedPromise();
+app.getSeedPromise = getSeedPromise;
 
 // Middleware
 app.use(cors({
@@ -74,9 +79,12 @@ app.use(['/api/admin', '/admin/api'], adminRoutes);
 
 // Health check endpoint
 app.get(['/api/health', '/health'], (req, res) => {
+  const { engine } = require('./db');
   res.json({
     status: 'ok',
     service: 'SEKALARUPA STUDIO Backend API',
+    databaseEngine: engine,
+    nodeVersion: process.version,
     uptime: process.uptime(),
     timestamp: new Date().toISOString()
   });

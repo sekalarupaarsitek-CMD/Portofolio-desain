@@ -43,12 +43,13 @@ const AdminAPI = {
       // Server returned HTML (e.g. 404 or Vercel error) instead of JSON
       if (!res.ok) {
         if (res.status === 404) {
-          throw new Error(`Endpoint API tidak ditemukan (404: ${endpoint}). Periksa routing backend.`);
+          throw new Error(`Endpoint API tidak ditemukan (404: ${endpoint}).`);
         }
+        const cleanSnippet = responseText.replace(/<[^>]*>?/gm, ' ').replace(/\s+/g, ' ').trim().slice(0, 120);
         if (res.status >= 500) {
-          throw new Error(`Server mengalami kendala (${res.status}). Silakan coba beberapa saat lagi.`);
+          throw new Error(`Server mengalami kendala (${res.status}): ${cleanSnippet || 'Silakan periksa log server'}`);
         }
-        throw new Error(`Server merespon dengan status ${res.status}.`);
+        throw new Error(`Server status ${res.status}: ${cleanSnippet}`);
       }
       throw new Error(`Respon server tidak valid (${responseText.slice(0, 100)}).`);
     }
