@@ -123,7 +123,21 @@ async function login(req, res) {
     }
 
     const cleanEmail = email.toLowerCase().trim();
-    const user = get('SELECT * FROM admin_users WHERE email = ?', [cleanEmail]);
+    let user = get('SELECT * FROM admin_users WHERE email = ?', [cleanEmail]);
+
+    // If user not found and database has no admins at all, seed default admin and re-query
+    if (!user) {
+      const adminCountRow = get('SELECT count(*) as count FROM admin_users');
+      if (!adminCountRow || adminCountRow.count === 0) {
+        try {
+          const { seedDatabase } = require('../db/seed');
+          await seedDatabase();
+          user = get('SELECT * FROM admin_users WHERE email = ?', [cleanEmail]);
+        } catch (seedErr) {
+          console.error('[Auth Auto-Seed Error]', seedErr.message);
+        }
+      }
+    }
 
     if (!user) {
       return res.status(401).json({

@@ -24,21 +24,51 @@ const AdminAPI = {
       headers['Content-Type'] = 'application/json';
     }
 
-    const res = await fetch(endpoint, {
-      ...options,
-      headers
-    });
+    let res;
+    try {
+      res = await fetch(endpoint, {
+        ...options,
+        headers
+      });
+    } catch (netErr) {
+      throw new Error(`Koneksi jaringan terputus (${netErr.message}). Pastikan server backend sedang aktif.`);
+    }
 
+    // Safely retrieve text to prevent SyntaxError on HTML/404/500 responses
+    const responseText = await res.text();
+    let data = null;
+    try {
+      data = responseText ? JSON.parse(responseText) : {};
+    } catch (parseErr) {
+      // Server returned HTML (e.g. 404 or Vercel error) instead of JSON
+      if (!res.ok) {
+        if (res.status === 404) {
+          throw new Error(`Endpoint API tidak ditemukan (404: ${endpoint}). Periksa routing backend.`);
+        }
+        if (res.status >= 500) {
+          throw new Error(`Server mengalami kendala (${res.status}). Silakan coba beberapa saat lagi.`);
+        }
+        throw new Error(`Server merespon dengan status ${res.status}.`);
+      }
+      throw new Error(`Respon server tidak valid (${responseText.slice(0, 100)}).`);
+    }
+
+    // Handle authentication failures
     if (res.status === 401) {
+      if (endpoint.includes('/auth/login')) {
+        throw new Error((data && data.error) ? data.error : 'Email atau password salah. Silakan periksa kembali.');
+      }
       this.setToken(null);
-      AdminApp.showAuthView();
-      throw new Error('Sesi berakhir. Silakan login kembali.');
+      if (typeof AdminApp.showLoginView === 'function') {
+        AdminApp.showLoginView();
+      }
+      throw new Error((data && data.error) || 'Sesi Anda telah berakhir. Silakan login kembali.');
     }
 
-    const data = await res.json();
     if (!res.ok) {
-      throw new Error(data.error || 'Terjadi kesalahan pada server');
+      throw new Error((data && data.error) || `Terjadi kesalahan pada server (${res.status})`);
     }
+
     return data;
   },
 
@@ -73,15 +103,13 @@ const AdminApp = {
 
     // Check setup status
     try {
-      const setupRes = await fetch('/api/auth/setup-status');
-      const setupData = await setupRes.json();
-
-      if (setupData.setupRequired) {
+      const setupData = await AdminAPI.get('/api/auth/setup-status');
+      if (setupData && setupData.setupRequired) {
         this.showSetupView();
         return;
       }
     } catch (e) {
-      console.warn('[Setup Check]', e);
+      console.warn('[Setup Check]', e.message);
     }
 
     // Check existing auth token
@@ -142,12 +170,18 @@ const AdminApp = {
     const setupForm = document.getElementById('setupForm');
     setupForm.onsubmit = async (e) => {
       e.preventDefault();
-      const fullName = document.getElementById('setupFullName').value;
-      const email = document.getElementById('setupEmail').value;
+      const fullName = (document.getElementById('setupFullName').value || '').trim();
+      const email = (document.getElementById('setupEmail').value || '').trim();
       const password = document.getElementById('setupPassword').value;
-      const phone = document.getElementById('setupPhone').value;
+      const phone = (document.getElementById('setupPhone').value || '').trim();
+      const submitBtn = setupForm.querySelector('button[type="submit"]');
+      const origText = submitBtn ? submitBtn.textContent : '';
 
       try {
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Menyimpan...';
+        }
         const res = await AdminAPI.post('/api/auth/setup', { fullName, email, password, phone });
         AdminAPI.setToken(res.token);
         this.user = res.user;
@@ -156,6 +190,11 @@ const AdminApp = {
         this.navigate('dashboard');
       } catch (err) {
         this.showToast(err.message, 'error');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = origText;
+        }
       }
     };
   },
@@ -169,10 +208,16 @@ const AdminApp = {
     const loginForm = document.getElementById('loginForm');
     loginForm.onsubmit = async (e) => {
       e.preventDefault();
-      const email = document.getElementById('loginEmail').value;
+      const email = (document.getElementById('loginEmail').value || '').trim();
       const password = document.getElementById('loginPassword').value;
+      const submitBtn = loginForm.querySelector('button[type="submit"]');
+      const origText = submitBtn ? submitBtn.textContent : '';
 
       try {
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.textContent = 'Memverifikasi...';
+        }
         const res = await AdminAPI.post('/api/auth/login', { email, password });
         AdminAPI.setToken(res.token);
         this.user = res.user;
@@ -181,6 +226,11 @@ const AdminApp = {
         this.navigate('dashboard');
       } catch (err) {
         this.showToast(err.message, 'error');
+      } finally {
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.textContent = origText;
+        }
       }
     };
   },

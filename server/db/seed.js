@@ -6,6 +6,7 @@
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const bcrypt = require('bcryptjs');
 const { get, run, all } = require('./index');
 
 function generateId(prefix = 'id') {
@@ -15,10 +16,35 @@ function generateId(prefix = 'id') {
 async function seedDatabase() {
   console.log('[Seeder] Checking if database needs initial seeding...');
 
+  // 0. Ensure Default Superadministrator Exists (PRD Section 23.6)
+  try {
+    const existingUsers = get('SELECT count(*) as count FROM admin_users');
+    if (!existingUsers || existingUsers.count === 0) {
+      console.log('[Seeder] Creating default administrator (admin@sekalarupa.com)...');
+      const adminId = generateId('usr');
+      const profileId = generateId('prof');
+      const salt = await bcrypt.genSalt(10);
+      const passwordHash = await bcrypt.hash('AdminPassword2026!', salt);
+
+      run(
+        'INSERT INTO admin_users (id, email, password_hash, role) VALUES (?, ?, ?, ?)',
+        [adminId, 'admin@sekalarupa.com', passwordHash, 'superadmin']
+      );
+
+      run(
+        'INSERT INTO admin_profiles (id, user_id, full_name, email, phone) VALUES (?, ?, ?, ?, ?)',
+        [profileId, adminId, 'Administrator Sekalarupa', 'admin@sekalarupa.com', '087857523074']
+      );
+      console.log('[Seeder] Default administrator created successfully.');
+    }
+  } catch (err) {
+    console.warn('[Seeder Warning] Admin seeding check:', err.message);
+  }
+
   // Check if categories or projects exist
   const existingProjects = get('SELECT count(*) as count FROM projects');
   if (existingProjects && existingProjects.count > 0) {
-    console.log(`[Seeder] Database already populated with ${existingProjects.count} projects. Skipping seed.`);
+    console.log(`[Seeder] Database already populated with ${existingProjects.count} projects. Skipping content seed.`);
     return;
   }
 

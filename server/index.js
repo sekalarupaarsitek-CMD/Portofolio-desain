@@ -29,9 +29,16 @@ if (!fs.existsSync(uploadsDir)) {
 }
 
 // Ensure database is seeded with initial data
-seedDatabase().catch(err => {
-  console.error('[Seeder Failed]', err);
-});
+let seedPromise = null;
+function getSeedPromise() {
+  if (!seedPromise) {
+    seedPromise = seedDatabase().catch(err => {
+      console.error('[Seeder Failed]', err);
+    });
+  }
+  return seedPromise;
+}
+getSeedPromise();
 
 // Middleware
 app.use(cors({
@@ -43,6 +50,16 @@ app.use(cors({
 app.use(express.json({ limit: '15mb' }));
 app.use(express.urlencoded({ extended: true, limit: '15mb' }));
 
+// Await database seeding for incoming requests
+app.use(async (req, res, next) => {
+  try {
+    await getSeedPromise();
+  } catch (e) {
+    // continue
+  }
+  next();
+});
+
 // Static file serving
 app.use('/uploads', express.static(uploadsDir));
 app.use('/assets', express.static(path.resolve(__dirname, '../assets')));
@@ -50,13 +67,13 @@ app.use('/css', express.static(path.resolve(__dirname, '../css')));
 app.use('/js', express.static(path.resolve(__dirname, '../js')));
 app.use('/admin', express.static(path.resolve(__dirname, '../admin')));
 
-// API Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/public', publicRoutes);
-app.use('/api/admin', adminRoutes);
+// API Routes (mounted on both /api/* and root prefixes to support Vercel serverless rewrites)
+app.use(['/api/auth', '/auth'], authRoutes);
+app.use(['/api/public', '/public'], publicRoutes);
+app.use(['/api/admin', '/admin/api'], adminRoutes);
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
+app.get(['/api/health', '/health'], (req, res) => {
   res.json({
     status: 'ok',
     service: 'SEKALARUPA STUDIO Backend API',
@@ -75,12 +92,19 @@ app.get('/admin', (req, res) => {
   res.sendFile(path.resolve(__dirname, '../admin/index.html'));
 });
 
-// 404 handler for API routes
-app.use('/api', (req, res) => {
-  res.status(404).json({
-    success: false,
-    error: `API endpoint ${req.method} ${req.originalUrl} not found.`
-  });
+// 404 handler for API routes (always returns JSON, never HTML)
+app.use((req, res, next) => {
+  const isApi = req.url.startsWith('/api') ||
+                req.url.startsWith('/auth') ||
+                req.url.startsWith('/public') ||
+                req.url.startsWith('/admin/api');
+  if (isApi) {
+    return res.status(404).json({
+      success: false,
+      error: `API endpoint ${req.method} ${req.originalUrl || req.url} tidak ditemukan.`
+    });
+  }
+  next();
 });
 
 // Global error handler
