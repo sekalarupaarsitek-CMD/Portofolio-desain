@@ -9,18 +9,42 @@ const path = require('path');
 const fs = require('fs');
 const { SQL_SCHEMA } = require('./schema');
 
-// Ensure database directory exists
-const DB_DIR = path.resolve(__dirname, '../../database');
+// Determine database path with Vercel serverless /tmp support
+const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+const DB_DIR = isServerless ? '/tmp' : path.resolve(__dirname, '../../database');
+
 if (!fs.existsSync(DB_DIR)) {
-  fs.mkdirSync(DB_DIR, { recursive: true });
+  try {
+    fs.mkdirSync(DB_DIR, { recursive: true });
+  } catch (e) {
+    console.warn('[DB Warning] mkdir failed:', e.message);
+  }
 }
 
 const DB_PATH = path.join(DB_DIR, 'sekalarupa.db');
+
+// If on Vercel and /tmp DB does not exist, copy the bundled repository DB
+if (isServerless && !fs.existsSync(DB_PATH)) {
+  const bundledDbPath = path.resolve(__dirname, '../../database/sekalarupa.db');
+  if (fs.existsSync(bundledDbPath)) {
+    try {
+      fs.copyFileSync(bundledDbPath, DB_PATH);
+      console.log(`[Database] Copied bundled database to ${DB_PATH} for serverless`);
+    } catch (err) {
+      console.warn('[Database] Could not copy bundled DB:', err.message);
+    }
+  }
+}
+
 const db = new DatabaseSync(DB_PATH);
 
 // Configure SQLite for high performance and integrity
 db.exec('PRAGMA foreign_keys = ON;');
-db.exec('PRAGMA journal_mode = WAL;');
+if (!isServerless) {
+  db.exec('PRAGMA journal_mode = WAL;');
+} else {
+  db.exec('PRAGMA journal_mode = DELETE;');
+}
 db.exec('PRAGMA synchronous = NORMAL;');
 
 // Initialize Tables

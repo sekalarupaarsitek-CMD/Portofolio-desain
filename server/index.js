@@ -17,10 +17,15 @@ const adminRoutes = require('./routes/adminRoutes');
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// Ensure uploads folder exists
-const uploadsDir = path.resolve(__dirname, '../uploads');
+// Ensure uploads folder exists (supporting Vercel /tmp)
+const isServerless = Boolean(process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+const uploadsDir = isServerless ? '/tmp/uploads' : path.resolve(__dirname, '../uploads');
 if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
+  try {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  } catch (e) {
+    console.warn('[Uploads Warning] mkdir failed:', e.message);
+  }
 }
 
 // Ensure database is seeded with initial data
